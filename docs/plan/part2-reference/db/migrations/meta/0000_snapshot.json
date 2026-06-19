@@ -1,0 +1,566 @@
+{
+  "id": "79dcc1b6-bd41-471d-8d6f-cf1b3c77eea0",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.habits": {
+      "name": "habits",
+      "schema": "",
+      "columns": {
+        "habit_id": {
+          "name": "habit_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_cn": {
+          "name": "name_cn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category_group_en": {
+          "name": "category_group_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_group_cn": {
+          "name": "category_group_cn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "category_name_en": {
+          "name": "category_name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_name_cn": {
+          "name": "category_name_cn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "subcategory": {
+          "name": "subcategory",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "color_group": {
+          "name": "color_group",
+          "type": "color_group",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "what_to_do_en": {
+          "name": "what_to_do_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "what_to_do_cn": {
+          "name": "what_to_do_cn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "why_it_works_en": {
+          "name": "why_it_works_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "why_it_works_cn": {
+          "name": "why_it_works_cn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "two_min_en": {
+          "name": "two_min_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "two_min_cn": {
+          "name": "two_min_cn",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anatomy_cue_en": {
+          "name": "anatomy_cue_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anatomy_behaviour_en": {
+          "name": "anatomy_behaviour_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "anatomy_reward_en": {
+          "name": "anatomy_reward_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "research_backing_en": {
+          "name": "research_backing_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "research_source_url": {
+          "name": "research_source_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tracking_type": {
+          "name": "tracking_type",
+          "type": "tracking_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "tracking_unit": {
+          "name": "tracking_unit",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tracking_default_target": {
+          "name": "tracking_default_target",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tracking_min": {
+          "name": "tracking_min",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tracking_max": {
+          "name": "tracking_max",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tracking_increment": {
+          "name": "tracking_increment",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "custom_target_allowed": {
+          "name": "custom_target_allowed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "time_of_day": {
+          "name": "time_of_day",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "estimated_duration_min": {
+          "name": "estimated_duration_min",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "difficulty": {
+          "name": "difficulty",
+          "type": "difficulty",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_default_bundle": {
+          "name": "is_default_bundle",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "notes_for_product": {
+          "name": "notes_for_product",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_published": {
+          "name": "is_published",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "sort_order": {
+          "name": "sort_order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.community_posts": {
+      "name": "community_posts",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "author_name": {
+          "name": "author_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "days_on_stalio": {
+          "name": "days_on_stalio",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "post_type": {
+          "name": "post_type",
+          "type": "post_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'story'"
+        },
+        "related_habit_ids": {
+          "name": "related_habit_ids",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "like_count": {
+          "name": "like_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "status": {
+          "name": "status",
+          "type": "post_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "ip_hash": {
+          "name": "ip_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "reviewed_at": {
+          "name": "reviewed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.habit_submissions": {
+      "name": "habit_submissions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "category_group_en": {
+          "name": "category_group_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "what_to_do_en": {
+          "name": "what_to_do_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "why_it_works_en": {
+          "name": "why_it_works_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "two_min_en": {
+          "name": "two_min_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "tracking_type": {
+          "name": "tracking_type",
+          "type": "tracking_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "submitter_name": {
+          "name": "submitter_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ip_hash": {
+          "name": "ip_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "status": {
+          "name": "status",
+          "type": "submission_status",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'pending'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "reviewed_at": {
+          "name": "reviewed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reviewed_by": {
+          "name": "reviewed_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.post_likes": {
+      "name": "post_likes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "post_id": {
+          "name": "post_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ip_hash": {
+          "name": "ip_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "post_likes_post_id_community_posts_id_fk": {
+          "name": "post_likes_post_id_community_posts_id_fk",
+          "tableFrom": "post_likes",
+          "tableTo": "community_posts",
+          "columnsFrom": [
+            "post_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "post_likes_post_ip_unique": {
+          "name": "post_likes_post_ip_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "post_id",
+            "ip_hash"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.color_group": {
+      "name": "color_group",
+      "schema": "public",
+      "values": [
+        "health",
+        "mental",
+        "productivity",
+        "financial",
+        "social",
+        "home"
+      ]
+    },
+    "public.difficulty": {
+      "name": "difficulty",
+      "schema": "public",
+      "values": [
+        "easy",
+        "moderate",
+        "hard"
+      ]
+    },
+    "public.tracking_type": {
+      "name": "tracking_type",
+      "schema": "public",
+      "values": [
+        "boolean",
+        "boolean_optional_text",
+        "number",
+        "volume",
+        "duration",
+        "duration_optional_text",
+        "time",
+        "scale",
+        "scale_optional_text",
+        "streak",
+        "text_required",
+        "multi_text_required"
+      ]
+    },
+    "public.post_status": {
+      "name": "post_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "published",
+        "rejected"
+      ]
+    },
+    "public.post_type": {
+      "name": "post_type",
+      "schema": "public",
+      "values": [
+        "story",
+        "question"
+      ]
+    },
+    "public.submission_status": {
+      "name": "submission_status",
+      "schema": "public",
+      "values": [
+        "pending",
+        "approved",
+        "rejected"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

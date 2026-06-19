@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+/* Design tokens — extracted from docs mockups. See docs/plan/part1/DESIGN_SYSTEM.md */
+@theme {
+  /* fonts (CSS vars provided by next/font in layout.tsx) */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-instrument-serif), ui-serif, Georgia, serif;
+
+  /* brand / core */
+  --color-ink: #1a1a2e;
+  --color-paper: #f7f5f0;
+  --color-paper-2: #efede8;
+  --color-mint: #00e5a0;
+  --color-mint-dim: #00b87e;
+  --color-amber: #ffb84d;
+  --color-slate: #8b8fa8;
+  --color-mist: #ededf5;
+  --color-red-soft: #ff6b6b;
+
+  /* category color groups: bg / text / accent */
+  --color-cat-health-bg: #e1f5ee;
+  --color-cat-health-text: #085041;
+  --color-cat-health-accent: #1d9e75;
+  --color-cat-mental-bg: #eeedfe;
+  --color-cat-mental-text: #3c3489;
+  --color-cat-mental-accent: #534ab7;
+  --color-cat-prod-bg: #e6f1fb;
+  --color-cat-prod-text: #0c447c;
+  --color-cat-prod-accent: #185fa5;
+  --color-cat-fin-bg: #faeeda;
+  --color-cat-fin-text: #633806;
+  --color-cat-fin-accent: #ba7517;
+  --color-cat-social-bg: #fbeaf0;
+  --color-cat-social-text: #72243e;
+  --color-cat-social-accent: #993556;
+  --color-cat-home-bg: #eaf3de;
+  --color-cat-home-text: #27500a;
+  --color-cat-home-accent: #639922;
+
+  /* radii */
+  --radius-r4: 4px;
+  --radius-r8: 8px;
+  --radius-r12: 12px;
+  --radius-card: 16px;
+  --radius-r24: 24px;
+  --radius-pill: 99px;
+
+  /* shadows */
+  --shadow-sm: 0 1px 4px rgba(26, 26, 46, 0.06);
+  --shadow-md: 0 4px 16px rgba(26, 26, 46, 0.1);
+  --shadow-lg: 0 12px 40px rgba(26, 26, 46, 0.14);
+}
+
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

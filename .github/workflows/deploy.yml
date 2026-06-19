@@ -1,0 +1,40 @@
+name: Deploy (Cloudflare Pages)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Requires two GitHub repo secrets:
+#   CLOUDFLARE_API_TOKEN  — token with "Cloudflare Pages: Edit" permission
+#   CLOUDFLARE_ACCOUNT_ID — your Cloudflare account ID
+# `wrangler pages deploy` auto-creates the "stalio-web" Pages project on first run.
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      deployments: write
+    env:
+      NEXT_PUBLIC_SITE_URL: ${{ vars.NEXT_PUBLIC_SITE_URL }}
+      NEXT_PUBLIC_APP_STORE_URL: ${{ vars.NEXT_PUBLIC_APP_STORE_URL }}
+      NEXT_PUBLIC_PLAY_STORE_URL: ${{ vars.NEXT_PUBLIC_PLAY_STORE_URL }}
+      NEXT_PUBLIC_DEEPLINK_SCHEME: ${{ vars.NEXT_PUBLIC_DEEPLINK_SCHEME }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy out --project-name=stalio-web

@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Habit Library — Stalio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.31.0/dist/tabler-icons.min.css">
+<style>
+/* ─── TOKENS ──────────────────────────────────────────────────────────────── */
+:root {
+  --ink:       #1A1A2E;
+  --ink-60:    rgba(26,26,46,.6);
+  --ink-30:    rgba(26,26,46,.3);
+  --ink-10:    rgba(26,26,46,.1);
+  --paper:     #F7F5F0;
+  --paper-2:   #EFEDE8;
+  --white:     #FFFFFF;
+  --mint:      #00E5A0;
+  --mint-bg:   rgba(0,229,160,.1);
+  --amber:     #FFB84D;
+  --slate:     #8B8FA8;
+  --mist:      #EDEDF5;
+
+  /* per-category: [light-bg, dark-text, mid-accent] */
+  --h-bg: #E1F5EE; --h-t: #085041; --h-a: #1D9E75;
+  --m-bg: #EEEDFE; --m-t: #3C3489; --m-a: #534AB7;
+  --p-bg: #E6F1FB; --p-t: #0C447C; --p-a: #185FA5;
+  --f-bg: #FAEEDA; --f-t: #633806; --f-a: #BA7517;
+  --s-bg: #FBEAF0; --s-t: #72243E; --s-a: #993556;
+  --e-bg: #EAF3DE; --e-t: #27500A; --e-a: #639922;
+
+  --r4:4px; --r8:8px; --r12:12px; --r16:16px; --r24:24px; --r99:99px;
+  --shadow-sm: 0 1px 4px rgba(26,26,46,.06);
+  --shadow-md: 0 4px 16px rgba(26,26,46,.10);
+  --shadow-lg: 0 12px 40px rgba(26,26,46,.14);
+  --trans: all .2s ease;
+}
+
+/* ─── RESET ─────────────────────────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--paper);color:var(--ink);font-size:15px;line-height:1.6;overflow-x:hidden}
+button{cursor:pointer;font-family:inherit;border:none;background:none}
+input,select{font-family:inherit}
+a{color:inherit;text-decoration:none}
+
+/* ─── NAV ────────────────────────────────────────────────────────────────── */
+.topnav{position:sticky;top:0;z-index:100;background:rgba(247,245,240,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--ink-10)}
+.topnav-inner{max-width:1440px;margin:0 auto;padding:0 32px;height:58px;display:flex;align-items:center;gap:24px}
+.nav-logo{display:flex;align-items:center;gap:8px;font-weight:700;font-size:17px;letter-spacing:-.3px}
+.logo-dot{width:26px;height:26px;background:var(--ink);border-radius:7px;display:flex;align-items:center;justify-content:center}
+.logo-dot i{color:var(--mint);font-size:14px}
+.nav-breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--slate);margin-left:4px}
+.nav-breadcrumb i{font-size:14px}
+.nav-breadcrumb span{color:var(--ink);font-weight:500}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.nav-btn-ghost{padding:7px 16px;border-radius:var(--r99);font-size:13px;font-weight:500;color:var(--slate);border:1px solid var(--ink-10);transition:var(--trans)}
+.nav-btn-ghost:hover{color:var(--ink);border-color:var(--ink-30)}
+.nav-btn-primary{padding:7px 18px;border-radius:var(--r99);font-size:13px;font-weight:600;background:var(--ink);color:var(--white);display:flex;align-items:center;gap:6px;transition:var(--trans)}
+.nav-btn-primary:hover{background:#2D2D52}
+
+/* ─── PAGE SHELL ─────────────────────────────────────────────────────────── */
+.page-shell{max-width:1440px;margin:0 auto;padding:0 32px;display:grid;grid-template-columns:280px 1fr;gap:0;min-height:calc(100vh - 58px)}
+
+/* ─── SIDEBAR ────────────────────────────────────────────────────────────── */
+.sidebar{position:sticky;top:58px;height:calc(100vh - 58px);overflow-y:auto;padding:32px 24px 32px 0;border-right:1px solid var(--ink-10);display:flex;flex-direction:column;gap:28px}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:var(--ink-10);border-radius:2px}
+
+/* sidebar search */
+.sb-search-wrap{position:relative}
+.sb-search{width:100%;padding:10px 14px 10px 38px;border-radius:var(--r12);border:1.5px solid var(--ink-10);background:var(--white);font-size:14px;color:var(--ink);transition:var(--trans)}
+.sb-search:focus{border-color:var(--mint);outline:none;box-shadow:0 0 0 3px var(--mint-bg)}
+.sb-search::placeholder{color:var(--slate)}
+.sb-search-icon{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--slate);font-size:16px;pointer-events:none}
+
+/* tracking quick-filter row */
+.sb-quick{display:flex;gap:6px;flex-wrap:wrap}
+.sb-quick-btn{padding:5px 12px;border-radius:var(--r99);font-size:12px;font-weight:500;border:1.5px solid var(--ink-10);color:var(--slate);transition:var(--trans)}
+.sb-quick-btn:hover{border-color:var(--ink-30);color:var(--ink)}
+.sb-quick-btn.active{border-color:var(--ink);background:var(--ink);color:var(--white)}
+
+/* category nav */
+.sb-section-label{font-size:10px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--slate);margin-bottom:10px}
+.cat-nav{display:flex;flex-direction:column;gap:2px}
+.cat-btn{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r12);transition:var(--trans);text-align:left;width:100%}
+.cat-btn:hover{background:var(--paper-2)}
+.cat-btn.active{background:var(--white);box-shadow:var(--shadow-sm)}
+.cat-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.cat-btn-label{font-size:13px;font-weight:500;color:var(--ink);flex:1}
+.cat-btn-count{font-size:12px;font-weight:600;padding:2px 8px;border-radius:var(--r99);background:var(--paper-2)}
+.cat-btn.active .cat-btn-count{background:var(--mist)}
+
+/* difficulty filter */
+.diff-btns{display:flex;gap:6px}
+.diff-btn{flex:1;padding:7px 0;border-radius:var(--r8);font-size:12px;font-weight:500;border:1.5px solid var(--ink-10);color:var(--slate);transition:var(--trans);text-align:center}
+.diff-btn:hover{border-color:var(--ink-30);color:var(--ink)}
+.diff-btn.active{background:var(--ink);border-color:var(--ink);color:var(--white)}
+
+/* sb bundle toggle */
+.sb-toggle{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--white);border-radius:var(--r12);border:1.5px solid var(--ink-10);cursor:pointer;transition:var(--trans)}
+.sb-toggle:hover{border-color:var(--ink-30)}
+.sb-toggle.active{border-color:var(--mint);background:var(--mint-bg)}
+.toggle-label{font-size:13px;font-weight:500;color:var(--ink)}
+.toggle-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:var(--r99);background:var(--mint-bg);color:var(--mint)}
+.sb-toggle.active .toggle-badge{background:var(--mint);color:var(--ink)}
+
+/* sb submit btn */
+.sb-submit-btn{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--ink);border-radius:var(--r12);color:var(--white);transition:var(--trans)}
+.sb-submit-btn:hover{background:#2D2D52;transform:translateY(-1px);box-shadow:var(--shadow-md)}
+.sb-submit-icon{width:32px;height:32px;border-radius:var(--r8);background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-submit-text .t1{font-size:13px;font-weight:600}
+.sb-submit-text .t2{font-size:11px;color:rgba(255,255,255,.45);margin-top:1px}
+
+/* ─── MAIN CONTENT ───────────────────────────────────────────────────────── */
+.main{padding:32px 0 32px 40px;min-height:calc(100vh - 58px)}
+
+/* page header */
+.page-header{margin-bottom:28px}
+.page-header-top{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:16px}
+.page-eyebrow{font-size:11px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--slate);margin-bottom:6px}
+.page-title{font-family:'Instrument Serif',serif;font-size:36px;line-height:1.1;letter-spacing:-.5px;color:var(--ink)}
+.page-title em{color:var(--mint);font-style:italic}
+.results-meta{font-size:13px;color:var(--slate)}
+.results-meta strong{color:var(--ink)}
+
+/* sort + view controls */
+.toolbar{display:flex;align-items:center;gap:10px;padding-bottom:20px;border-bottom:1px solid var(--ink-10);margin-bottom:24px}
+.sort-select{padding:7px 32px 7px 14px;border-radius:var(--r8);border:1.5px solid var(--ink-10);font-size:13px;font-weight:500;color:var(--ink);background:var(--white);appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238B8FA8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;cursor:pointer;transition:var(--trans)}
+.sort-select:focus{border-color:var(--mint);outline:none}
+.view-toggle{display:flex;border:1.5px solid var(--ink-10);border-radius:var(--r8);overflow:hidden;margin-left:auto}
+.view-btn{width:34px;height:34px;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--slate);transition:var(--trans)}
+.view-btn.active{background:var(--ink);color:var(--white)}
+.view-btn:hover:not(.active){background:var(--paper-2)}
+.active-filters{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.af-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:var(--r99);font-size:12px;font-weight:500;background:var(--white);border:1.5px solid var(--ink-10);color:var(--ink)}
+.af-chip-remove{color:var(--slate);font-size:12px;transition:var(--trans);cursor:pointer;display:flex}
+.af-chip-remove:hover{color:var(--ink)}
+.clear-all{font-size:12px;font-weight:500;color:var(--slate);padding:5px 10px;border-radius:var(--r99);transition:var(--trans)}
+.clear-all:hover{color:var(--ink);background:var(--paper-2)}
+
+/* ─── HABIT GRID ─────────────────────────────────────────────────────────── */
+.habit-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:14px}
+.habit-grid.list-view{grid-template-columns:1fr;gap:8px}
+
+/* ─── HABIT CARD ─────────────────────────────────────────────────────────── */
+.hcard{background:var(--white);border:1.5px solid var(--ink-10);border-radius:var(--r16);overflow:hidden;transition:var(--trans);cursor:pointer;position:relative}
+.hcard:hover{border-color:var(--ink-30);box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.hcard.expanded{border-color:var(--ink);box-shadow:var(--shadow-lg);transform:translateY(0);cursor:default}
+.hcard.bundle-card{border-color:rgba(0,229,160,.4)}
+.hcard.bundle-card:hover{border-color:var(--mint)}
+
+/* card top accent strip */
+.hcard-strip{height:4px;width:100%}
+
+/* card main */
+.hcard-main{padding:18px 18px 14px}
+.hcard-row1{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.hcard-icon{width:40px;height:40px;border-radius:var(--r12);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.hcard-name{font-size:15px;font-weight:600;color:var(--ink);line-height:1.25;margin-bottom:3px}
+.hcard-cat{font-size:11px;font-weight:500}
+.bundle-pip{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;padding:2px 7px;border-radius:var(--r99);background:var(--mint-bg);color:var(--mint);letter-spacing:.03em;text-transform:uppercase;margin-left:6px;vertical-align:middle}
+.hcard-desc{font-size:13px;color:var(--slate);line-height:1.6;margin-bottom:12px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-clamp:2;overflow:hidden}
+.hcard-footer{display:flex;align-items:center;justify-content:space-between}
+.hcard-tags{display:flex;gap:6px;flex-wrap:wrap}
+.htag{font-size:11px;font-weight:500;padding:3px 9px;border-radius:var(--r99);border:1px solid var(--ink-10);color:var(--ink-60)}
+.hcard-actions{display:flex;gap:6px;flex-shrink:0}
+.hbtn{width:32px;height:32px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:15px;color:var(--slate);background:var(--paper);transition:var(--trans)}
+.hbtn:hover{background:var(--paper-2);color:var(--ink)}
+.hbtn.add:hover{background:var(--mint-bg);color:var(--mint)}
+.expand-btn{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;color:var(--slate);padding:4px 8px;border-radius:var(--r8);transition:var(--trans)}
+.expand-btn:hover{color:var(--ink);background:var(--paper)}
+.expand-btn i{transition:transform .2s}
+.hcard.expanded .expand-btn i{transform:rotate(180deg)}
+
+/* ─── EXPANDED PANEL ─────────────────────────────────────────────────────── */
+.hcard-expanded{display:none;border-top:1px solid var(--ink-10);background:var(--paper);padding:20px 20px 16px}
+.hcard.expanded .hcard-expanded{display:block}
+
+/* habit anatomy bar */
+.anatomy-bar{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr;align-items:center;gap:0;margin-bottom:20px;background:var(--white);border:1px solid var(--ink-10);border-radius:var(--r12);overflow:hidden}
+.anatomy-step{padding:12px 14px}
+.anatomy-arrow{display:flex;align-items:center;justify-content:center;color:var(--ink-30);font-size:14px}
+.anatomy-label{font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--slate);margin-bottom:4px}
+.anatomy-value{font-size:12px;font-weight:500;color:var(--ink);line-height:1.4}
+
+/* detail sections */
+.exp-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.exp-block{background:var(--white);border-radius:var(--r12);padding:14px 16px;border:1px solid var(--ink-10)}
+.exp-block.full{grid-column:1/-1}
+.exp-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--slate);margin-bottom:6px}
+.exp-value{font-size:13px;color:var(--ink);line-height:1.55}
+.exp-value.research{font-size:12px;color:var(--ink-60)}
+.twomin-box{background:var(--ink);border-radius:var(--r12);padding:14px 18px;margin-bottom:14px;display:flex;align-items:flex-start;gap:12px}
+.twomin-icon{width:30px;height:30px;border-radius:var(--r8);background:var(--mint-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.twomin-icon i{color:var(--mint);font-size:15px}
+.twomin-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:4px}
+.twomin-text{font-size:13px;font-weight:500;color:var(--white);font-style:italic;line-height:1.5}
+
+/* tracking viz */
+.tracking-viz{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--white);border-radius:var(--r12);border:1px solid var(--ink-10);margin-bottom:14px}
+.tv-icon{width:36px;height:36px;border-radius:var(--r8);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.tv-body{}
+.tv-method{font-size:13px;font-weight:600;color:var(--ink)}
+.tv-detail{font-size:11px;color:var(--slate);margin-top:2px}
+.tv-demo{margin-left:auto;flex-shrink:0}
+/* boolean demo */
+.bool-demo{display:flex;gap:6px}
+.bool-day{width:24px;height:24px;border-radius:var(--r4);display:flex;align-items:center;justify-content:center;font-size:12px}
+.bool-day.done{background:var(--mint);color:var(--ink)}
+.bool-day.skip{background:var(--paper-2);color:var(--slate);font-size:9px}
+/* duration demo */
+.dur-demo{display:flex;align-items:center;gap:6px}
+.dur-bar-bg{width:60px;height:6px;background:var(--paper-2);border-radius:3px}
+.dur-bar{height:6px;border-radius:3px}
+.dur-label{font-size:11px;font-weight:600}
+/* volume demo */
+.vol-demo{display:flex;gap:3px;align-items:flex-end}
+.vol-dot{border-radius:50%;flex-shrink:0}
+/* scale demo */
+.scale-demo{display:flex;gap:4px}
+.scale-pip{width:20px;height:8px;border-radius:2px;background:var(--paper-2)}
+
+/* exp cta row */
+.exp-cta{display:flex;gap:8px}
+.exp-add-btn{flex:1;padding:11px 0;background:var(--ink);color:var(--white);border-radius:var(--r12);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:7px;transition:var(--trans);cursor:pointer}
+.exp-add-btn:hover{background:#2D2D52}
+.exp-add-btn.added{background:var(--mint);color:var(--ink)}
+.exp-share-btn{padding:11px 16px;border:1.5px solid var(--ink-10);border-radius:var(--r12);font-size:13px;font-weight:500;color:var(--slate);display:flex;align-items:center;gap:6px;transition:var(--trans);cursor:pointer}
+.exp-share-btn:hover{border-color:var(--ink-30);color:var(--ink)}
+
+/* ─── LIST VIEW VARIANT ──────────────────────────────────────────────────── */
+.list-view .hcard{border-radius:var(--r12)}
+.list-view .hcard-strip{display:none}
+.list-view .hcard-main{padding:14px 18px;display:grid;grid-template-columns:40px 1fr auto;align-items:start;gap:12px}
+.list-view .hcard-row1{margin:0;gap:0}
+.list-view .hcard-desc{display:none}
+.list-view .hcard-footer{display:none}
+.list-view .hcard-row1 .hcard-icon{display:none}
+.list-view .lv-meta{display:flex;align-items:center;gap:8px;margin-top:4px;flex-wrap:wrap}
+.list-view .lv-actions{display:flex;align-items:center;gap:6px}
+
+/* empty state */
+.empty-state{text-align:center;padding:80px 40px;grid-column:1/-1}
+.empty-icon{width:60px;height:60px;border-radius:50%;background:var(--paper-2);display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px}
+.empty-title{font-size:18px;font-weight:600;color:var(--ink);margin-bottom:8px}
+.empty-sub{font-size:14px;color:var(--slate);line-height:1.65;max-width:360px;margin:0 auto 20px}
+
+/* load more */
+.load-more-row{grid-column:1/-1;display:flex;justify-content:center;padding-top:8px}
+.load-more-btn{padding:11px 32px;border-radius:var(--r99);border:1.5px solid var(--ink-10);font-size:14px;font-weight:500;color:var(--ink);transition:var(--trans)}
+.load-more-btn:hover{border-color:var(--ink-30);background:var(--white);box-shadow:var(--shadow-sm)}
+
+/* ─── MODAL (submit habit) ───────────────────────────────────────────────── */
+.overlay{position:fixed;inset:0;background:rgba(10,10,20,.6);backdrop-filter:blur(6px);z-index:200;opacity:0;pointer-events:none;transition:opacity .22s;display:flex;align-items:center;justify-content:center;padding:24px}
+.overlay.open{opacity:1;pointer-events:all}
+.modal{background:var(--white);border-radius:var(--r24);width:100%;max-width:580px;max-height:90vh;overflow-y:auto;transform:translateY(12px);transition:transform .22s;box-shadow:var(--shadow-lg)}
+.overlay.open .modal{transform:translateY(0)}
+.modal-hd{padding:24px 24px 18px;border-bottom:1px solid var(--ink-10);display:flex;align-items:center;gap:14px}
+.modal-hd-icon{width:42px;height:42px;border-radius:var(--r12);background:var(--ink);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.modal-hd-icon i{color:var(--mint)}
+.modal-title{font-size:17px;font-weight:600;color:var(--ink)}
+.modal-sub{font-size:12px;color:var(--slate);margin-top:2px}
+.modal-x{margin-left:auto;width:30px;height:30px;border-radius:var(--r8);background:var(--paper);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--slate);cursor:pointer;transition:var(--trans);flex-shrink:0}
+.modal-x:hover{background:var(--paper-2);color:var(--ink)}
+.modal-bd{padding:22px 24px}
+.fg{margin-bottom:16px}
+.fl{font-size:12px;font-weight:500;color:var(--ink-60);margin-bottom:5px;display:block}
+.fl em{color:var(--mint);font-style:normal}
+.fi{width:100%;padding:9px 13px;border:1.5px solid var(--ink-10);border-radius:var(--r8);font-size:14px;color:var(--ink);transition:var(--trans);background:var(--white)}
+.fi:focus{border-color:var(--mint);outline:none;box-shadow:0 0 0 3px var(--mint-bg)}
+.fi::placeholder{color:var(--slate)}
+.fi-ta{resize:vertical;min-height:80px;line-height:1.5}
+.fi-sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238B8FA8' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;cursor:pointer}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.modal-submit{width:100%;padding:12px;background:var(--ink);color:var(--white);border-radius:var(--r12);font-size:14px;font-weight:600;cursor:pointer;transition:var(--trans);margin-top:4px;display:flex;align-items:center;justify-content:center;gap:8px}
+.modal-submit:hover{background:#2D2D52}
+
+/* ─── TOAST ──────────────────────────────────────────────────────────────── */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--ink);border:1px solid rgba(0,229,160,.3);padding:11px 22px;border-radius:var(--r99);font-size:13px;font-weight:500;color:var(--mint);z-index:300;transition:transform .3s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-lg);pointer-events:none;white-space:nowrap}
+.toast.show{transform:translateX(-50%) translateY(0)}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────────────── */
+@media(max-width:1024px){.page-shell{grid-template-columns:240px 1fr}}
+@media(max-width:820px){
+  .page-shell{grid-template-columns:1fr;padding:0 20px}
+  .sidebar{position:static;height:auto;padding:20px 0;border-right:none;border-bottom:1px solid var(--ink-10);flex-direction:row;flex-wrap:wrap;gap:16px;overflow-x:auto}
+  .sb-search-wrap,.cat-nav,.diff-btns,.sb-quick,.sb-toggle,.sb-submit-btn{min-width:200px}
+  .main{padding:24px 0}
+  .exp-grid{grid-template-columns:1fr}
+  .anatomy-bar{grid-template-columns:1fr 16px 1fr 16px 1fr}
+  .form-row{grid-template-columns:1fr}
+}
+@media(max-width:560px){
+  .page-title{font-size:28px}
+  .habit-grid{grid-template-columns:1fr}
+  .nav-breadcrumb{display:none}
+}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="topnav-inner">
+    <a href="#" class="nav-logo">
+      <div class="logo-dot"><i class="ti ti-check"></i></div>
+      stalio
+    </a>
+    <div class="nav-breadcrumb">
+      <i class="ti ti-chevron-right"></i>
+      <span>Habit library</span>
+    </div>
+    <div class="nav-right">
+      <button class="nav-btn-ghost" onclick="openSubmit()">Submit a habit</button>
+      <button class="nav-btn-primary"><i class="ti ti-download"></i> Get the app</button>
+    </div>
+  </div>
+</nav>
+
+<!-- PAGE SHELL -->
+<div class="page-shell">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+
+    <!-- search -->
+    <div>
+      <div class="sb-search-wrap">
+        <i class="ti ti-search sb-search-icon"></i>
+        <input type="text" class="sb-search" id="main-search" placeholder="Search habits…" oninput="applyFilters()">
+      </div>
+    </div>
+
+    <!-- tracking method -->
+    <div>
+      <div class="sb-section-label">Tracking method</div>
+      <div class="sb-quick">
+        <button class="sb-quick-btn active" data-track="All" onclick="setTrack(this)">All</button>
+        <button class="sb-quick-btn" data-track="Yes / No" onclick="setTrack(this)">Yes / No</button>
+        <button class="sb-quick-btn" data-track="Duration" onclick="setTrack(this)">Duration</button>
+        <button class="sb-quick-btn" data-track="Volume" onclick="setTrack(this)">Volume</button>
+        <button class="sb-quick-btn" data-track="Streak" onclick="setTrack(this)">Streak</button>
+        <button class="sb-quick-btn" data-track="Scale" onclick="setTrack(this)">Scale</button>
+      </div>
+    </div>
+
+    <!-- categories -->
+    <div>
+      <div class="sb-section-label">Category</div>
+      <div class="cat-nav" id="cat-nav">
+        <button class="cat-btn active" data-cat="All" onclick="setCat(this)">
+          <div class="cat-dot" style="background:var(--ink)"></div>
+          <span class="cat-btn-label">All habits</span>
+          <span class="cat-btn-count" id="cnt-all">48</span>
+        </button>
+        <button class="cat-btn" data-cat="Health & Body" onclick="setCat(this)">
+          <div class="cat-dot" style="background:var(--h-a)"></div>
+          <span class="cat-btn-label">Health & body</span>
+          <span class="cat-btn-count" id="cnt-h">12</span>
+        </button>
+        <button class="cat-btn" data-cat="Mental & Emotional" onclick="setCat(this)">
+          <div class="cat-dot" style="background:var(--m-a)"></div>
+          <span class="cat-btn-label">Mental & emotional</span>
+          <span class="cat-btn-count" id="cnt-m">11</span>
+        </button>
+        <button class="cat-btn" data-cat="Productivity & Growth" onclick="setCat(this)">
+          <div class="cat-dot" style="background:var(--p-a)"></div>
+          <span class="cat-btn-label">Productivity & growth</span>
+          <span class="cat-btn-count" id="cnt-p">11</span>
+        </button>
+        <button class="cat-btn" data-cat="Financial" onclick="setCat(this)">
+          <div class="cat-dot" style="background:var(--f-a)"></div>
+          <span class="cat-btn-label">Financial</span>
+          <span class="cat-btn-count" id="cnt-f">7</span>
+        </button>
+        <button class="cat-btn" data-cat="Social & Relationships" onclick="setCat(this)">
+          <div class="cat-dot" style="background:var(--s-a)"></div>
+          <span class="cat-btn-label">Social & relationships</span>
+          <span class="cat-btn-count" id="cnt-s">4</span>
+        </button>
+        <button class="cat-btn" data-cat="Home & Environment" onclick="setCat(this)">
+          <div class="cat-dot" style="background:var(--e-a)"></div>
+          <span class="cat-btn-label">Home & environment</span>
+          <span class="cat-btn-count" id="cnt-e">3</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- difficulty -->
+    <div>
+      <div class="sb-section-label">Difficulty</div>
+      <div class="diff-btns">
+        <button class="diff-btn active" data-diff="All" onclick="setDiff(this)">All</button>
+        <button class="diff-btn" data-diff="Easy" onclick="setDiff(this)">Easy</button>
+        <button class="diff-btn" data-diff="Moderate" onclick="setDiff(this)">Moderate</button>
+        <button class="diff-btn" data-diff="Hard" onclick="setDiff(this)">Hard</button>
+      </div>
+    </div>
+
+    <!-- bundle toggle -->
+    <div>
+      <button class="sb-toggle" id="bundle-toggle" onclick="toggleBundle()">
+        <div>
+          <div class="toggle-label">Default bundle only</div>
+        </div>
+        <span class="toggle-badge" id="bundle-badge">6 habits</span>
+      </button>
+    </div>
+
+    <!-- submit -->
+    <button class="sb-submit-btn" onclick="openSubmit()">
+      <div class="sb-submit-icon"><i class="ti ti-plus" style="color:var(--mint);font-size:16px"></i></div>
+      <div class="sb-submit-text">
+        <div class="t1">Submit a habit</div>
+        <div class="t2">Grow the library</div>
+      </div>
+    </button>
+
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <div class="page-header">
+      <div class="page-header-top">
+        <div>
+          <div class="page-eyebrow">Habit library</div>
+          <h1 class="page-title">Every habit. Researched.<br><em>Ready to add.</em></h1>
+        </div>
+      </div>
+      <div class="results-meta" id="results-meta">Showing <strong>48</strong> habits</div>
+    </div>
+
+    <!-- toolbar -->
+    <div class="toolbar">
+      <div class="active-filters" id="active-filters"></div>
+      <select class="sort-select" id="sort-select" onchange="applyFilters()">
+        <option value="default">Sort: Default</option>
+        <option value="az">A → Z</option>
+        <option value="za">Z → A</option>
+        <option value="easy">Easiest first</option>
+        <option value="hard">Hardest first</option>
+        <option value="bundle">Bundle first</option>
+      </select>
+      <div class="view-toggle">
+        <button class="view-btn active" id="grid-btn" onclick="setView('grid')" title="Grid view"><i class="ti ti-layout-grid"></i></button>
+        <button class="view-btn" id="list-btn" onclick="setView('list')" title="List view"><i class="ti ti-list"></i></button>
+      </div>
+    </div>
+
+    <!-- habit grid -->
+    <div class="habit-grid" id="habit-grid"></div>
+
+  </main>
+</div>
+
+<!-- ── SUBMIT MODAL ── -->
+<div class="overlay" id="submit-overlay" onclick="closeSubmit(event)">
+  <div class="modal">
+    <div class="modal-hd">
+      <div class="modal-hd-icon"><i class="ti ti-plus"></i></div>
+      <div>
+        <div class="modal-title">Submit a habit</div>
+        <div class="modal-sub">Share something that works for you — it might help thousands of others</div>
+      </div>
+      <button class="modal-x" onclick="document.getElementById('submit-overlay').classList.remove('open')"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="modal-bd">
+      <div class="fg">
+        <label class="fl">Habit name <em>*</em></label>
+        <input class="fi" type="text" placeholder="e.g. Cold shower, Gratitude walk, No-news morning" maxlength="60">
+      </div>
+      <div class="form-row">
+        <div class="fg">
+          <label class="fl">Category <em>*</em></label>
+          <select class="fi fi-sel">
+            <option value="" disabled selected>Choose…</option>
+            <option>Health & Body</option>
+            <option>Mental & Emotional</option>
+            <option>Productivity & Growth</option>
+            <option>Financial</option>
+            <option>Social & Relationships</option>
+            <option>Home & Environment</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="fl">Tracking method</label>
+          <select class="fi fi-sel">
+            <option value="" disabled selected>How to track?</option>
+            <option>Yes / No</option>
+            <option>Duration (minutes)</option>
+            <option>Volume (count)</option>
+            <option>Streak (days)</option>
+            <option>Scale (1–5)</option>
+          </select>
+        </div>
+      </div>
+      <div class="fg">
+        <label class="fl">What to do <em>*</em></label>
+        <textarea class="fi fi-ta" placeholder="Describe exactly what someone should do. Be specific and actionable."></textarea>
+      </div>
+      <div class="fg">
+        <label class="fl">Why it works</label>
+        <textarea class="fi fi-ta" placeholder="What benefit does this habit provide? Share any research or personal experience."></textarea>
+      </div>
+      <div class="fg">
+        <label class="fl">2-minute version</label>
+        <input class="fi" type="text" placeholder="The smallest possible version someone can do today?">
+      </div>
+      <div class="fg">
+        <label class="fl">Your name (optional)</label>
+        <input class="fi" type="text" placeholder="First name, or leave anonymous">
+      </div>
+      <button class="modal-submit" onclick="submitHabit()"><i class="ti ti-send"></i> Submit for review</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="ti ti-check-circle"></i><span id="toast-msg"></span></div>
+
+<script>
+// ── DATA ─────────────────────────────────────────────────────────────────────
+const CAT = {
+  'Health & Body':         {bg:'#E1F5EE',t:'#085041',a:'#1D9E75',strip:'#1D9E75',icon_bg:'rgba(29,158,117,.15)'},
+  'Mental & Emotional':    {bg:'#EEEDFE',t:'#3C3489',a:'#534AB7',strip:'#534AB7',icon_bg:'rgba(83,74,183,.15)'},
+  'Productivity & Growth': {bg:'#E6F1FB',t:'#0C447C',a:'#185FA5',strip:'#185FA5',icon_bg:'rgba(24,95,165,.15)'},
+  'Financial':             {bg:'#FAEEDA',t:'#633806',a:'#BA7517',strip:'#BA7517',icon_bg:'rgba(186,117,23,.15)'},
+  'Social & Relationships':{bg:'#FBEAF0',t:'#72243E',a:'#993556',strip:'#993556',icon_bg:'rgba(153,53,86,.15)'},
+  'Home & Environment':    {bg:'#EAF3DE',t:'#27500A',a:'#639922',strip:'#639922',icon_bg:'rgba(99,153,34,.15)'},
+};
+
+const HABITS = [
+  /* Health & Body */
+  {id:'H001',name:'Move your body',cat:'Health & Body',icon:'ti-run',diff:'Moderate',track:'Duration',time:'Any',target:'30 min',bundle:true,
+   what:'Do any intentional physical movement today — walking, running, gym, cycling, yoga, swimming, dancing, or any sport.',
+   why:'Improves cardiovascular health, boosts mood through endorphins, increases energy levels, improves sleep quality, reduces risk of chronic disease, and enhances cognitive function.',
+   research:'WHO guidelines: 150–300 min moderate aerobic activity per week. Harvard (2021): 15 min/day of exercise reduces all-cause mortality by 14%. Exercise is as effective as antidepressants for mild-moderate depression (Blumenthal et al).',
+   twomin:'Walk to the end of your street and back',
+   cue:'Morning alarm or after waking',behavior:'Any intentional movement — no minimum',reward:'Energy boost + mood lift that lasts all day'},
+  {id:'H002',name:'Drink enough water',cat:'Health & Body',icon:'ti-droplet',diff:'Easy',track:'Volume',time:'All day',target:'8 glasses',bundle:true,
+   what:'Drink 8 glasses (approx 2 litres) of water throughout the day. Log each glass as you go.',
+   why:'Supports kidney function, improves skin health, aids digestion, reduces fatigue, improves concentration, and prevents headaches.',
+   research:'National Academies of Sciences: adult daily adequate intake is 3.7L (men) and 2.7L (women). Even mild dehydration (1–2%) impairs cognitive performance and mood (Adan, 2012).',
+   twomin:'Drink one full glass of water right now',
+   cue:'Every time you fill your mug or kettle',behavior:'One glass at a time, tracked',reward:'Clearer head, better energy, visible progress ring'},
+  {id:'H003',name:'Sleep consistently',cat:'Health & Body',icon:'ti-moon',diff:'Easy',track:'Bedtime log',time:'Evening',target:'Same ±30 min',bundle:true,
+   what:'Go to bed within the same 30-minute window each night and log your bedtime. The habit is regularity, not just duration.',
+   why:"Consistent sleep timing improves sleep quality, mood, cognitive performance, immune function, and metabolism. Irregular schedules are linked to depression and obesity even when total hours are adequate.",
+   research:'Walker (Why We Sleep, 2017): regularity matters as much as duration. Circadian rhythm disruption linked to 29% increased cardiovascular risk (Makarem et al, 2021).',
+   twomin:'Go to bed right now at the same time as last night',
+   cue:'Same bedtime alarm every night',behavior:'Log your bedtime within 30-min window',reward:'Waking up rested, no alarm needed eventually'},
+  {id:'H004',name:'Eat well today',cat:'Health & Body',icon:'ti-salad',diff:'Easy',track:'Yes / No',time:'Evening',target:'Daily',bundle:true,
+   what:"At the end of the day, reflect honestly: did you make food choices today that you feel good about? No tracking, no counting — just a yes/no check-in.",
+   why:'Builds nutritional self-awareness without the burden of logging. Poor diet is linked to obesity, diabetes, and cardiovascular disease.',
+   research:'Self-monitoring is one of the most effective behaviour-change strategies (Burke et al, 2011). Reflection-based tracking improves dietary choices even without calorie targets.',
+   twomin:'Ask yourself: did I eat at least one real meal today?',
+   cue:'Evening brush-teeth routine',behavior:'One honest yes/no question',reward:'Identity shift: "I am someone who eats with intention"'},
+  {id:'H005',name:'Take vitamins',cat:'Health & Body',icon:'ti-pill',diff:'Easy',track:'Yes / No',time:'Morning',target:'Daily',bundle:false,
+   what:'Take your daily supplements at the same time each day — vitamins, omega-3, creatine, or any health supplement stack.',
+   why:'Addresses nutritional gaps. Vitamin D deficiency affects ~40% of adults. Omega-3 linked to cardiovascular and cognitive health. Consistency is the key driver of benefit.',
+   research:'Vitamin D supplementation reduces all-cause mortality by 11% (Autier & Gandini, 2007). Omega-3 associated with 25% reduced cardiovascular event risk (REDUCE-IT trial, 2018).',
+   twomin:'Put your supplements next to your coffee maker tonight',
+   cue:'Making your morning coffee or tea',behavior:'Take your supplement stack',reward:'Peace of mind; no nutritional gaps'},
+  {id:'H006',name:'Strength training',cat:'Health & Body',icon:'ti-barbell',diff:'Moderate',track:'Yes / No',time:'Any',target:'Session done',bundle:false,
+   what:'Complete a resistance training session using weights, machines, bodyweight, or resistance bands.',
+   why:'Builds and preserves muscle mass (critical after age 30), increases metabolic rate, improves bone density, reduces injury risk.',
+   research:'WHO recommends muscle-strengthening 2+ days/week. Resistance training reduces all-cause mortality by up to 23% (Stamatakis et al, 2018). Reduces osteoporosis risk by up to 40% for women.',
+   twomin:'Do 10 bodyweight squats right now',
+   cue:'Gym bag visible by the door the night before',behavior:'45–60 min resistance session',reward:'Strength gains that compound over months'},
+  {id:'H007',name:'Hit 10,000 steps',cat:'Health & Body',icon:'ti-shoe',diff:'Easy',track:'Volume',time:'All day',target:'10,000 steps',bundle:false,
+   what:'Walk enough throughout the day to reach 10,000 steps — through deliberate walks, commuting on foot, taking stairs.',
+   why:'Reduces risk of cardiovascular disease, type 2 diabetes, and all-cause mortality. No equipment or gym membership required.',
+   research:'Paluch et al (2021): 7,000–8,000 steps/day reduces mortality risk by 50–70% vs sedentary baseline.',
+   twomin:'Walk around the block — that\'s about 1,000 steps',
+   cue:'Phone step counter notification at noon',behavior:'Move throughout the day, not in one burst',reward:'Progress ring closing; elevated daily energy'},
+  {id:'H008',name:'Stretch / mobility',cat:'Health & Body',icon:'ti-yoga',diff:'Easy',track:'Duration',time:'Any',target:'10 min',bundle:false,
+   what:'Spend 10 minutes on deliberate stretching or mobility work — static stretches, dynamic warm-up, foam rolling, or yoga flows.',
+   why:'Improves range of motion, reduces injury risk, relieves muscle tension from desk work, reduces chronic pain.',
+   research:'Regular stretching reduces musculoskeletal injury risk by 54% (Hartig & Henderson, 1999). Mobility work shown to reduce lower back pain in multiple RCTs.',
+   twomin:'Stand up and do 5 slow neck rolls each direction',
+   cue:'Right after your morning shower',behavior:'10 min of deliberate movement',reward:'Less stiffness, better athletic performance'},
+  {id:'H009',name:'No alcohol today',cat:'Health & Body',icon:'ti-ban',diff:'Moderate',track:'Streak',time:'Any',target:'Sober streak',bundle:false,
+   what:'Track each day you do not consume alcohol. Accumulate sober days, reduce frequency, or complete a defined challenge.',
+   why:'Improves sleep quality (alcohol suppresses REM), supports liver health, improves mood stability, reduces cancer risk.',
+   research:'WHO: alcohol is a Group 1 carcinogen — no safe level for cancer risk (Lancet, 2018). Dry January: 88% feel achievement, 70% better sleep, 67% more energy (BUPA, 2023).',
+   twomin:'Pour a non-alcoholic drink tonight instead',
+   cue:'5pm urge to unwind',behavior:'Choose a non-alcoholic alternative',reward:'Better sleep, clearer mornings, streak milestone'},
+  {id:'H010',name:'Cook at home',cat:'Health & Body',icon:'ti-chef-hat',diff:'Moderate',track:'Yes / No',time:'Any',target:'1 meal',bundle:false,
+   what:'Cook or prepare at least one meal at home today — breakfast, lunch, or dinner. Simple assembly qualifies too.',
+   why:'Reduces food spend by average $300–500/month vs eating out, improves nutritional quality, reduces calorie intake.',
+   research:'People who cook at home consume ~350 fewer calories/day (Johns Hopkins, 2014). Home cooking associated with 24% reduced risk of type 2 diabetes.',
+   twomin:'Make tomorrow\'s lunch tonight — it takes 5 minutes',
+   cue:'Sunday meal prep session',behavior:'At least one home-cooked meal',reward:'Financial savings + nutritional control'},
+  /* Mental */
+  {id:'H011',name:'Take a moment',cat:'Mental & Emotional',icon:'ti-leaf',diff:'Easy',track:'Duration',time:'Morning',target:'10 min',bundle:true,
+   what:'Spend 5–10 minutes in intentional stillness. Meditation, breathwork, quiet sitting, or guided audio. No specific technique required.',
+   why:'Reduces cortisol (stress hormone), improves emotional regulation, increases focus and attention span, reduces symptoms of anxiety and depression.',
+   research:'Goyal et al (JAMA 2014): mindfulness programs show moderate evidence of improving anxiety and depression. Harvard: 8 weeks of daily meditation measurably changes gray matter density in prefrontal cortex.',
+   twomin:'Sit quietly for 2 minutes with your eyes closed',
+   cue:'After making your morning drink',behavior:'5–10 min of intentional stillness',reward:'Calmer start, reduced morning anxiety'},
+  {id:'H012',name:'Meditate',cat:'Mental & Emotional',icon:'ti-brain',diff:'Moderate',track:'Duration',time:'Morning',target:'10 min',bundle:false,
+   what:'Sit quietly and meditate for a defined duration. Can be guided (app, audio) or unguided. Techniques include breath focus, body scan, loving-kindness.',
+   why:'Reduces anxiety, depression, and chronic pain. Improves attention, working memory, emotional regulation. Long-term practitioners show structural brain changes.',
+   research:'Lazar et al (NeuroReport 2005): experienced meditators have increased cortical thickness in prefrontal cortex. 8-week MBSR programs show lasting neuroplastic changes (Holzel et al, 2011).',
+   twomin:'Sit still for 2 minutes and count your breaths',
+   cue:'Same time each morning before other activities',behavior:'Dedicated, technique-based practice',reward:'Improved focus and equanimity that carries through the day'},
+  {id:'H013',name:'Journal',cat:'Mental & Emotional',icon:'ti-notebook',diff:'Moderate',track:'Duration',time:'Any',target:'10 min',bundle:false,
+   what:'Write freely in a journal for a defined amount of time. Can be prompted or unprompted, digital or paper. No editing, no rules.',
+   why:'Reduces stress and anxiety, improves emotional processing, builds self-awareness, and has been shown to improve immune function.',
+   research:'Pennebaker & Beall (1986): expressive writing about difficult experiences significantly improved long-term psychological and physical health.',
+   twomin:'Write one sentence about how you feel right now',
+   cue:'After dinner before screens',behavior:'Free-form writing, no rules',reward:'Emotional clarity; a record of growth over time'},
+  {id:'H014',name:'Gratitude practice',cat:'Mental & Emotional',icon:'ti-heart',diff:'Easy',track:'Volume',time:'Evening',target:'3 things',bundle:false,
+   what:'Write down or mentally note 3 things you are genuinely grateful for today. Be specific — specificity makes it work.',
+   why:'Increases subjective wellbeing, reduces depressive symptoms, improves relationship satisfaction, shifts attentional bias toward positive.',
+   research:'Emmons & McCullough (2003): weekly gratitude lists reported higher wellbeing and more optimism. Daily gratitude associated with reduced inflammation markers.',
+   twomin:'Name one thing that went well today',
+   cue:'Right before setting down your phone for the night',behavior:'3 specific things, written down',reward:'Positivity bias shift over 4+ weeks'},
+  {id:'H015',name:'Mood log',cat:'Mental & Emotional',icon:'ti-mood-smile',diff:'Easy',track:'Scale',time:'Evening',target:'1–5 rating',bundle:false,
+   what:'Once per day, rate your overall mood on a 1–5 scale and optionally add a one-line note about why. Takes under 60 seconds.',
+   why:'Builds emotional self-awareness, helps identify mood patterns linked to sleep and exercise, provides data for therapy.',
+   research:'App-based mood tracking shown to reduce depression symptoms as a standalone intervention (Bakker et al, 2016).',
+   twomin:'Rate your day from 1 to 5 right now',
+   cue:'Evening bedtime routine',behavior:'1–5 rating + optional note',reward:'Patterns visible after 2 weeks; insight into your own cycles'},
+  {id:'H016',name:'No phone first 30 min',cat:'Mental & Emotional',icon:'ti-device-mobile-off',diff:'Moderate',track:'Yes / No',time:'Morning',target:'30 min free',bundle:false,
+   what:"Do not check your phone for the first 30 minutes after waking. Start the day with your own thoughts before absorbing others'.",
+   why:'Protects early-morning cognitive clarity, reduces morning anxiety triggered by notifications, allows intentional day-setting.',
+   research:'Checking phones first thing linked to increased cortisol and anxiety (Akerstedt et al, 2012). Huberman (Stanford): delaying phone use preserves prefrontal cortex\'s problem-solving advantage.',
+   twomin:'Leave your phone on the other side of the room tonight',
+   cue:'Alarm goes off',behavior:'Stay off phone for 30 full minutes',reward:'Calmer morning; proactive vs reactive mental frame'},
+  {id:'H017',name:'Morning sunlight',cat:'Mental & Emotional',icon:'ti-sun',diff:'Easy',track:'Duration',time:'Morning',target:'10 min',bundle:false,
+   what:'Get 10–20 minutes of natural sunlight within the first hour of waking. Go outside or sit near an open window.',
+   why:'Sets circadian rhythm, boosts morning cortisol pulse (healthy and energising), improves alertness, mood, and sleep quality later that night.',
+   research:'Huberman (Stanford, 2021): morning sunlight is the single most powerful lever for circadian health. Light in first hour shown to improve sleep quality (Khalsa et al, 2003).',
+   twomin:'Step outside for 2 minutes right after reading this',
+   cue:'Walk to get your morning coffee',behavior:'10–20 min of outdoor light exposure',reward:'Stable energy through the day, better sleep at night'},
+  {id:'H018',name:'Breathwork',cat:'Mental & Emotional',icon:'ti-wind',diff:'Easy',track:'Duration',time:'Any',target:'5 min',bundle:false,
+   what:'Practice a defined breathing technique for 3–5 minutes: box breathing (4-4-4-4), 4-7-8 breathing, or Wim Hof.',
+   why:'Activates the parasympathetic nervous system, reduces acute stress within minutes, improves HRV, lowers blood pressure.',
+   research:'Zaccaro et al (2018): slow breathing techniques produce significant improvements in cardiovascular and central nervous system function. Box breathing adopted by US Navy SEALs.',
+   twomin:'Take 4 slow deep breaths right now',
+   cue:'Before a stressful meeting or at lunchtime',behavior:'3–5 min breathing technique',reward:'Immediate stress reduction; improved HRV over time'},
+  /* Productivity */
+  {id:'H019',name:'Read',cat:'Productivity & Growth',icon:'ti-book',diff:'Moderate',track:'Duration',time:'Evening',target:'20 min',bundle:false,
+   what:'Read for a defined duration or number of pages. Any genre counts — fiction, non-fiction, biography.',
+   why:'Reduces stress (6 minutes of reading reduces stress by 68%), expands vocabulary, builds knowledge, improves empathy.',
+   research:'Sussex University (2009): reading reduces stress by 68% — faster than music or walking. Long-form reading improves working memory and fluid intelligence.',
+   twomin:'Read the next page of whatever book is nearest you',
+   cue:'Phone charging across the room; book on your pillow',behavior:'20–30 min uninterrupted reading',reward:'Relaxation, knowledge compound, better sleep'},
+  {id:'H020',name:'Deep work block',cat:'Productivity & Growth',icon:'ti-bolt',diff:'Hard',track:'Duration',time:'Morning',target:'90 min',bundle:false,
+   what:'Complete one block of focused, cognitively demanding work with zero distractions — no phone, no notifications.',
+   why:'Produces highest-quality cognitive output, builds skills faster than fragmented work, and creates flow states.',
+   research:'Cal Newport (Deep Work, 2016): focus without distraction is the defining career skill. Knowledge workers average only 3 minutes before interruption.',
+   twomin:'Close all browser tabs except one and work for 25 minutes',
+   cue:'Same time each morning, phone in drawer',behavior:'90 min (or 25 min Pomodoro) of zero-distraction work',reward:'Flow state, high-quality output, compounding career advantage'},
+  {id:'H021',name:'Language practice',cat:'Productivity & Growth',icon:'ti-language',diff:'Moderate',track:'Duration',time:'Morning',target:'15 min',bundle:false,
+   what:'Study or practise a foreign language — Duolingo, Babbel, Anki, conversation with a tutor, or self-study.',
+   why:'Builds a valuable skill, delays cognitive decline (bilingualism delays Alzheimer\'s by ~5 years), opens travel and career opportunities.',
+   research:'Duolingo internal data: daily practice for 34 hours = one college semester. Bialystok et al (2007): bilingualism delays dementia onset by 4.1 years.',
+   twomin:'Open Duolingo and complete one lesson right now',
+   cue:'Immediately after morning coffee',behavior:'15–20 min of focused language study',reward:'Measurable progress; Duolingo streak as daily anchor'},
+  {id:'H022',name:'Review top 3 priorities',cat:'Productivity & Growth',icon:'ti-list-check',diff:'Easy',track:'Yes / No',time:'Morning',target:'Daily',bundle:false,
+   what:'Write down or review the 3 most important things you need to accomplish today. Do this before opening email or messages.',
+   why:'Reduces decision fatigue, ensures high-leverage work gets done before reactive work takes over.',
+   research:'Ivy Lee Method (1918): still cited as one of the most effective productivity techniques. Implementation intentions increase goal achievement by 2–3x (Gollwitzer, 1999).',
+   twomin:'Write down the one most important thing for today',
+   cue:'First thing, before opening any app',behavior:'Write exactly 3 priorities',reward:'Clear daily success definition; reduced mental clutter'},
+  {id:'H023',name:'Creative work',cat:'Productivity & Growth',icon:'ti-pencil',diff:'Moderate',track:'Duration',time:'Any',target:'30 min',bundle:false,
+   what:'Spend a defined amount of time on your primary creative pursuit — writing, music, art, design, or any craft. Must create, not just consume.',
+   why:'Builds creative confidence through repetition, reduces creative anxiety, creates a body of work over time.',
+   research:'Twyla Tharp (The Creative Habit): creativity is a practice, not a gift. Simonton (1997): quantity of work is the strongest predictor of eventual quality.',
+   twomin:'Make one small thing right now — even a rough draft',
+   cue:'Same time, same place, every day',behavior:'30 min of making something',reward:'Body of work that compounds; reduced "waiting for inspiration"'},
+  {id:'H024',name:'Evening review',cat:'Productivity & Growth',icon:'ti-clipboard-check',diff:'Easy',track:'Yes / No',time:'Evening',target:'Daily',bundle:false,
+   what:'Spend 5–10 minutes reviewing: what did I accomplish, what didn\'t get done, and what are tomorrow\'s 3 priorities?',
+   why:'Closes open mental loops (reduces rumination and improves sleep), builds self-accountability.',
+   research:'Zeigarnik effect (1927): incomplete tasks occupy working memory until resolved. Writing them down effectively offloads them (GTD method).',
+   twomin:'Write down the one thing you are most proud of today',
+   cue:'Shutting your laptop for the evening',behavior:'5–10 min structured review',reward:'Cleaner mental shutdown; better prepared morning'},
+  /* Financial */
+  {id:'H025',name:'Spend intentionally',cat:'Financial',icon:'ti-coin',diff:'Easy',track:'Yes / No',time:'Evening',target:'Daily',bundle:true,
+   what:'Once per day, ask yourself: did I spend money today, and was it intentional or impulsive? A simple yes/no check-in.',
+   why:'Financial awareness is the prerequisite to financial discipline. Most overspending is unconscious.',
+   research:'Mental accounting (Thaler, 1999): categorising spending changes behaviour. Spending self-reflection reduces discretionary spending by 15–20% without formal budgets.',
+   twomin:'Think: did I buy anything today I didn\'t need?',
+   cue:'Evening after dinner',behavior:'One honest reflection question',reward:'Spending awareness that shifts behaviour over weeks'},
+  {id:'H026',name:'Log spending',cat:'Financial',icon:'ti-receipt',diff:'Moderate',track:'Yes / No',time:'Evening',target:'Daily',bundle:false,
+   what:'Record every purchase you make today — item, amount, and category.',
+   why:'Creates precise financial awareness. Most people underestimate discretionary spending by 30–50%.',
+   research:'Expense tracking reduces spending by avg 15–20% in the first month (CFPB). YNAB users save avg $600 in first 2 months.',
+   twomin:'Log the last thing you spent money on',
+   cue:'Right after any purchase',behavior:'Log item, amount, category',reward:'Clear picture of where money actually goes'},
+  {id:'H027',name:'No-spend day',cat:'Financial',icon:'ti-wallet-off',diff:'Moderate',track:'Yes / No',time:'Any',target:'Daily',bundle:false,
+   what:"Complete a full day without spending money on non-essential items. Necessary expenses excluded.",
+   why:'Builds financial willpower, reveals how much discretionary spending is habitual.',
+   research:'Loss aversion (Kahneman & Tversky): the satisfaction of saving $20 is psychologically stronger than spending $20 gives pleasure.',
+   twomin:'Decide right now: will today be a no-spend day?',
+   cue:'Morning intention-setting moment',behavior:'Zero non-essential spending',reward:'Streak of sober spending; tangible savings accumulate'},
+  {id:'H028',name:'Transfer to savings',cat:'Financial',icon:'ti-piggy-bank',diff:'Easy',track:'Volume',time:'Morning',target:'Any amount',bundle:false,
+   what:'Make a deliberate transfer to a savings account or savings goal today. Amount can be any size.',
+   why:'Makes saving an active, visible behaviour. "Pay yourself first" principle dramatically increases savings rates.',
+   research:'Thaler & Sunstein (Nudge, 2008): automatic saving is the single most effective savings intervention. Active transfers accumulate 40% more over 5 years.',
+   twomin:'Transfer £1 to savings right now — seriously, just £1',
+   cue:'Same time every morning before daily spending',behavior:'Transfer any amount to savings',reward:'Savings goal progress visible; compounding motivation'},
+  /* Social */
+  {id:'H029',name:'Reach out to someone',cat:'Social & Relationships',icon:'ti-message-circle',diff:'Easy',track:'Yes / No',time:'Any',target:'1 person',bundle:false,
+   what:'Send a personal message, make a call, or have a meaningful conversation with one person today — an initiation, not just a reply.',
+   why:'Combats loneliness, strengthens relationships proactively, improves sense of belonging and wellbeing.',
+   research:'US Surgeon General Advisory on Loneliness (2023): loneliness epidemic affects over 50% of Americans. Harvard Study of Adult Development (80+ years): social connection is the #1 predictor of happiness.',
+   twomin:'Text one person right now who you haven\'t spoken to this week',
+   cue:'Lunchtime, before eating',behavior:'One intentional personal outreach',reward:'Relationship maintenance; reduced loneliness over time'},
+  {id:'H030',name:'Device-free family time',cat:'Social & Relationships',icon:'ti-users',diff:'Easy',track:'Duration',time:'Evening',target:'30 min',bundle:false,
+   what:'Spend a defined amount of time with family or close people with all devices put away — meals, games, walks, conversation.',
+   why:'Improves relationship quality, models healthy technology use for children, creates deeper connection through undivided attention.',
+   research:'Ward et al (2017): face-down phones on tables reduce conversation quality even when not in use. Family meals without screens improve child outcomes across all dimensions.',
+   twomin:'Put your phone in another room for the next 30 minutes',
+   cue:'Family dinner time',behavior:'30 min phone-free presence',reward:'Deeper connection; children\'s sense of being valued'},
+  /* Home */
+  {id:'H031',name:'Make the bed',cat:'Home & Environment',icon:'ti-home',diff:'Easy',track:'Yes / No',time:'Morning',target:'Daily',bundle:false,
+   what:'Make your bed within 30 minutes of waking up. Pull up the sheets, arrange the pillows.',
+   why:'Gives an immediate sense of accomplishment, sets an organised tone for the day, improves sense of control.',
+   research:'McRaven (2014): making your bed is the first task of the day. Vohs et al (2013): tidy environments improve decision-making and reduce impulsivity.',
+   twomin:'Pull up your duvet right now — that counts',
+   cue:'Right after getting up — before anything else',behavior:'2–3 min bed-making',reward:'First win of the day; organised bedroom to return to'},
+  {id:'H032',name:'Tidy for 10 minutes',cat:'Home & Environment',icon:'ti-sparkles',diff:'Easy',track:'Duration',time:'Evening',target:'10 min',bundle:false,
+   what:'Set a timer for 10 minutes and tidy one area of your home or workspace. Do not organise or deep-clean — just put things back.',
+   why:'Reduces visual clutter (shown to increase cortisol), improves focus in subsequent work sessions.',
+   research:'Vohs et al (2013): disordered environments impair self-control. Time-boxing housework dramatically improves completion rates vs open-ended cleaning tasks.',
+   twomin:'Set a 10-minute timer and just start — anywhere',
+   cue:'After dinner before sitting down for the evening',behavior:'10-min timed tidy',reward:'Calm environment to wake up to; prevents accumulation'},
+];
+
+// ── STATE ──────────────────────────────────────────────────────────────────
+let activeFilters = {cat:'All', diff:'All', track:'All', bundle:false, search:''};
+let viewMode = 'grid';
+let visibleCount = 16;
+let expandedId = null;
+const addedHabits = new Set(['H001','H002','H003','H004','H011','H025']); // bundle pre-added
+
+// ── FILTER LOGIC ──────────────────────────────────────────────────────────
+function getFiltered() {
+  let list = HABITS.filter(h => {
+    if (activeFilters.bundle && !h.bundle) return false;
+    if (activeFilters.cat !== 'All' && h.cat !== activeFilters.cat) return false;
+    if (activeFilters.diff !== 'All' && h.diff !== activeFilters.diff) return false;
+    if (activeFilters.track !== 'All' && h.track !== activeFilters.track) return false;
+    if (activeFilters.search) {
+      const q = activeFilters.search.toLowerCase();
+      return h.name.toLowerCase().includes(q) ||
+             h.cat.toLowerCase().includes(q) ||
+             h.what.toLowerCase().includes(q) ||
+             h.why.toLowerCase().includes(q);
+    }
+    return true;
+  });
+  const sort = document.getElementById('sort-select').value;
+  if (sort === 'az') list.sort((a,b)=>a.name.localeCompare(b.name));
+  else if (sort === 'za') list.sort((a,b)=>b.name.localeCompare(a.name));
+  else if (sort === 'easy') {const o={Easy:0,Moderate:1,Hard:2}; list.sort((a,b)=>o[a.diff]-o[b.diff]);}
+  else if (sort === 'hard') {const o={Easy:0,Moderate:1,Hard:2}; list.sort((a,b)=>o[b.diff]-o[a.diff]);}
+  else if (sort === 'bundle') list.sort((a,b)=>b.bundle-a.bundle);
+  return list;
+}
+
+function applyFilters() {
+  activeFilters.search = document.getElementById('main-search').value;
+  visibleCount = 16;
+  expandedId = null;
+  render();
+}
+
+function setCat(btn) {
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilters.cat = btn.dataset.cat;
+  applyFilters();
+}
+
+function setDiff(btn) {
+  document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilters.diff = btn.dataset.diff;
+  applyFilters();
+}
+
+function setTrack(btn) {
+  document.querySelectorAll('.sb-quick-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  activeFilters.track = btn.dataset.track;
+  applyFilters();
+}
+
+function toggleBundle() {
+  activeFilters.bundle = !activeFilters.bundle;
+  const tog = document.getElementById('bundle-toggle');
+  tog.classList.toggle('active', activeFilters.bundle);
+  applyFilters();
+}
+
+function setView(v) {
+  viewMode = v;
+  document.getElementById('grid-btn').classList.toggle('active', v==='grid');
+  document.getElementById('list-btn').classList.toggle('active', v==='list');
+  render();
+}
+
+// ── EXPAND ─────────────────────────────────────────────────────────────────
+function toggleExpand(id, event) {
+  event.stopPropagation();
+  expandedId = (expandedId === id) ? null : id;
+  render();
+  if (expandedId) {
+    setTimeout(()=>{
+      const el = document.getElementById('hc-'+id);
+      if (el) el.scrollIntoView({behavior:'smooth', block:'nearest'});
+    }, 50);
+  }
+}
+
+// ── ADD HABIT ──────────────────────────────────────────────────────────────
+function addHabit(id, event) {
+  event.stopPropagation();
+  const h = HABITS.find(x=>x.id===id);
+  if (!h) return;
+  if (addedHabits.has(id)) {
+    showToast(`"${h.name}" is already in your app`);
+    return;
+  }
+  addedHabits.add(id);
+  showToast(`"${h.name}" added to your Stalio app`);
+  render();
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function trackingVizHTML(h) {
+  const c = CAT[h.cat];
+  if (h.track === 'Yes / No') {
+    return `<div class="bool-demo">
+      ${['✓','✓','','✓','✓'].map((v,i)=>`<div class="bool-day ${v?'done':'skip'}" style="${v?`background:${c.a}`:''}">
+        ${v?`<i class="ti ti-check" style="font-size:11px"></i>`:'−'}</div>`).join('')}
+    </div>`;
+  }
+  if (h.track === 'Duration') {
+    const pct = 75;
+    return `<div class="dur-demo">
+      <div class="dur-bar-bg"><div class="dur-bar" style="width:${pct}%;background:${c.a}"></div></div>
+      <span class="dur-label" style="color:${c.a}">${h.target}</span>
+    </div>`;
+  }
+  if (h.track === 'Volume') {
+    return `<div class="vol-demo">
+      ${[8,10,12,11,9,14].map(v=>`<div class="vol-dot" style="width:6px;height:${Math.round(v/14*28)+6}px;background:${c.a};opacity:${0.4+v/14*.6}"></div>`).join('')}
+    </div>`;
+  }
+  if (h.track === 'Scale') {
+    return `<div class="scale-demo">
+      ${[1,2,3,4,5].map(i=>`<div class="scale-pip" style="${i<=3?`background:${c.a};opacity:${0.4+i*.15}`:''}"></div>`).join('')}
+    </div>`;
+  }
+  if (h.track === 'Streak') {
+    return `<div style="font-size:13px;font-weight:700;color:${c.a}">🔥 14 days</div>`;
+  }
+  if (h.track === 'Bedtime log') {
+    return `<div style="font-size:12px;font-weight:600;color:${c.a}">10:32pm</div>`;
+  }
+  return '';
+}
+
+function cardHTML(h) {
+  const c = CAT[h.cat];
+  const isExpanded = expandedId === h.id;
+  const isAdded = addedHabits.has(h.id);
+
+  const anatomy = `
+    <div class="anatomy-bar">
+      <div class="anatomy-step">
+        <div class="anatomy-label">Cue</div>
+        <div class="anatomy-value">${h.cue}</div>
+      </div>
+      <div class="anatomy-arrow"><i class="ti ti-arrow-right"></i></div>
+      <div class="anatomy-step" style="background:${c.bg}">
+        <div class="anatomy-label" style="color:${c.a}">Behaviour</div>
+        <div class="anatomy-value" style="color:${c.t}">${h.behavior}</div>
+      </div>
+      <div class="anatomy-arrow"><i class="ti ti-arrow-right"></i></div>
+      <div class="anatomy-step">
+        <div class="anatomy-label">Reward</div>
+        <div class="anatomy-value">${h.reward}</div>
+      </div>
+    </div>`;
+
+  if (viewMode === 'list') {
+    return `
+    <div class="hcard${isExpanded?' expanded':''}${h.bundle?' bundle-card':''}" id="hc-${h.id}">
+      <div class="hcard-main" onclick="toggleExpand('${h.id}',event)" style="cursor:pointer">
+        <div class="hcard-icon" style="background:${c.icon_bg}">
+          <i class="ti ${h.icon}" style="color:${c.a}"></i>
+        </div>
+        <div>
+          <div class="hcard-name">${h.name}${h.bundle?'<span class="bundle-pip"><i class="ti ti-star-filled" style="font-size:8px"></i> Bundle</span>':''}</div>
+          <div class="lv-meta">
+            <span style="font-size:11px;font-weight:500;color:${c.a}">${h.cat}</span>
+            <span class="htag">${h.track}</span>
+            <span class="htag" style="${h.diff==='Hard'?'border-color:rgba(255,100,100,.3);color:#E24B4A':h.diff==='Easy'?`border-color:${c.a}33;color:${c.a}`:''}">${h.diff}</span>
+            <span class="htag">${h.time}</span>
+          </div>
+        </div>
+        <div class="lv-actions">
+          <button class="expand-btn" onclick="toggleExpand('${h.id}',event)">
+            ${isExpanded?'Less':'More'} <i class="ti ti-chevron-down"></i>
+          </button>
+          <button class="hbtn add" title="${isAdded?'In your app':'Add to app'}" onclick="addHabit('${h.id}',event)" style="${isAdded?`background:${c.bg};color:${c.a}`:''}">
+            <i class="ti ${isAdded?'ti-check':'ti-download'}"></i>
+          </button>
+        </div>
+      </div>
+      <div class="hcard-expanded">
+        ${anatomy}
+        <div class="twomin-box">
+          <div class="twomin-icon"><i class="ti ti-clock"></i></div>
+          <div><div class="twomin-label">2-minute version</div><div class="twomin-text">${h.twomin}</div></div>
+        </div>
+        <div class="exp-grid">
+          <div class="exp-block"><div class="exp-label">What to do</div><div class="exp-value">${h.what}</div></div>
+          <div class="exp-block"><div class="exp-label">Why it works</div><div class="exp-value">${h.why}</div></div>
+          <div class="exp-block full"><div class="exp-label">Research</div><div class="exp-value research">${h.research}</div></div>
+        </div>
+        <div class="exp-cta">
+          <button class="exp-add-btn${isAdded?' added':''}" onclick="addHabit('${h.id}',event)">
+            <i class="ti ${isAdded?'ti-check':'ti-download'}"></i>
+            ${isAdded?'Added to your app':'Add to Stalio app'}
+          </button>
+          <button class="exp-share-btn" onclick="event.stopPropagation();copyLink('${h.id}')"><i class="ti ti-share"></i> Share</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // grid view
+  return `
+    <div class="hcard${isExpanded?' expanded':''}${h.bundle?' bundle-card':''}" id="hc-${h.id}" onclick="${isExpanded?'':'toggleExpand(\''+h.id+'\',event)'}">
+      <div class="hcard-strip" style="background:${c.strip}"></div>
+      <div class="hcard-main">
+        <div class="hcard-row1">
+          <div class="hcard-icon" style="background:${c.icon_bg}">
+            <i class="ti ${h.icon}" style="color:${c.a}"></i>
+          </div>
+          <div>
+            <div class="hcard-name">${h.name}${h.bundle?'<span class="bundle-pip"><i class="ti ti-star-filled" style="font-size:8px"></i> Bundle</span>':''}</div>
+            <div class="hcard-cat" style="color:${c.a}">${h.cat}</div>
+          </div>
+        </div>
+        <div class="hcard-desc">${h.what}</div>
+        <div class="hcard-footer">
+          <div class="hcard-tags">
+            <span class="htag">${h.track}</span>
+            <span class="htag" style="${h.diff==='Hard'?'border-color:rgba(255,100,100,.3);color:#E24B4A':h.diff==='Easy'?`border-color:${c.a}33;color:${c.a}`:''}">${h.diff}</span>
+            <span class="htag">${h.time}</span>
+          </div>
+          <div class="hcard-actions">
+            <button class="hbtn" title="Details" onclick="toggleExpand('${h.id}',event)">
+              <i class="ti ${isExpanded?'ti-chevron-up':'ti-info-circle'}"></i>
+            </button>
+            <button class="hbtn add" title="${isAdded?'In your app':'Add to app'}" onclick="addHabit('${h.id}',event)" style="${isAdded?`background:${c.bg};color:${c.a}`:''}">
+              <i class="ti ${isAdded?'ti-check':'ti-download'}"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="hcard-expanded">
+        ${anatomy}
+        <div class="twomin-box">
+          <div class="twomin-icon"><i class="ti ti-clock"></i></div>
+          <div><div class="twomin-label">2-minute version</div><div class="twomin-text">${h.twomin}</div></div>
+        </div>
+        <div class="tracking-viz">
+          <div class="tv-icon" style="background:${c.icon_bg}"><i class="ti ${h.icon}" style="color:${c.a}"></i></div>
+          <div class="tv-body">
+            <div class="tv-method">${h.track}</div>
+            <div class="tv-detail">Target: ${h.target} · ${h.time}</div>
+          </div>
+          <div class="tv-demo">${trackingVizHTML(h)}</div>
+        </div>
+        <div class="exp-grid">
+          <div class="exp-block"><div class="exp-label">What to do</div><div class="exp-value">${h.what}</div></div>
+          <div class="exp-block"><div class="exp-label">Why it works</div><div class="exp-value">${h.why}</div></div>
+          <div class="exp-block full"><div class="exp-label">Research backing</div><div class="exp-value research">${h.research}</div></div>
+        </div>
+        <div class="exp-cta">
+          <button class="exp-add-btn${isAdded?' added':''}" onclick="addHabit('${h.id}',event)">
+            <i class="ti ${isAdded?'ti-check':'ti-download'}"></i>
+            ${isAdded?'Added to your app':'Add to Stalio app'}
+          </button>
+          <button class="exp-share-btn" onclick="event.stopPropagation();copyLink('${h.id}')"><i class="ti ti-share"></i> Share</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function render() {
+  const filtered = getFiltered();
+  const shown = filtered.slice(0, visibleCount);
+  const grid = document.getElementById('habit-grid');
+
+  grid.className = `habit-grid${viewMode==='list'?' list-view':''}`;
+  document.getElementById('results-meta').innerHTML =
+    `Showing <strong>${Math.min(visibleCount,filtered.length)}</strong> of <strong>${filtered.length}</strong> habits`;
+
+  if (!filtered.length) {
+    grid.innerHTML = `<div class="empty-state">
+      <div class="empty-icon"><i class="ti ti-search"></i></div>
+      <div class="empty-title">No habits match</div>
+      <div class="empty-sub">Try different filters, or submit a new habit if you don't see what you're looking for.</div>
+      <button class="nav-btn-primary" onclick="clearAll()" style="margin:0 auto;display:flex">Clear all filters</button>
+    </div>`;
+    document.getElementById('active-filters').innerHTML = '';
+    return;
+  }
+
+  grid.innerHTML = shown.map(cardHTML).join('') +
+    (filtered.length > visibleCount ? `<div class="load-more-row">
+      <button class="load-more-btn" onclick="loadMore()">Load more habits (${filtered.length - visibleCount} remaining)</button>
+    </div>` : '');
+
+  renderActiveFilters();
+}
+
+function loadMore() {
+  visibleCount += 12;
+  render();
+}
+
+function renderActiveFilters() {
+  const chips = [];
+  if (activeFilters.cat !== 'All') chips.push({label: activeFilters.cat, clear:()=>{activeFilters.cat='All';document.querySelector('[data-cat="All"]').click();}});
+  if (activeFilters.diff !== 'All') chips.push({label: activeFilters.diff, clear:()=>{activeFilters.diff='All';document.querySelector('[data-diff="All"]').click();}});
+  if (activeFilters.track !== 'All') chips.push({label: activeFilters.track, clear:()=>{activeFilters.track='All';document.querySelector('[data-track="All"]').click();}});
+  if (activeFilters.bundle) chips.push({label:'Bundle only', clear:()=>toggleBundle()});
+  if (activeFilters.search) chips.push({label:`"${activeFilters.search}"`, clear:()=>{activeFilters.search='';document.getElementById('main-search').value='';applyFilters();}});
+
+  const af = document.getElementById('active-filters');
+  if (!chips.length) { af.innerHTML = ''; return; }
+  af.innerHTML = chips.map((c,i)=>`
+    <div class="af-chip">
+      ${c.label}
+      <span class="af-chip-remove" onclick="chips_${i}_clear()">&times;</span>
+    </div>`).join('') + `<button class="clear-all" onclick="clearAll()">Clear all</button>`;
+  chips.forEach((c,i)=>{ window[`chips_${i}_clear`]=c.clear; });
+}
+
+function clearAll() {
+  activeFilters = {cat:'All',diff:'All',track:'All',bundle:false,search:''};
+  document.getElementById('main-search').value = '';
+  document.querySelector('[data-cat="All"]').click();
+  document.querySelector('[data-diff="All"]').click();
+  document.querySelector('[data-track="All"]').click();
+  document.getElementById('bundle-toggle').classList.remove('active');
+  applyFilters();
+}
+
+function copyLink(id) {
+  const h = HABITS.find(x=>x.id===id);
+  showToast(`Link to "${h.name}" copied`);
+}
+
+// ── SUBMIT MODAL ──────────────────────────────────────────────────────────
+function openSubmit() {
+  document.getElementById('submit-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeSubmit(e) {
+  if (e.target.id === 'submit-overlay') {
+    document.getElementById('submit-overlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+function submitHabit() {
+  document.getElementById('submit-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+  showToast('Habit submitted — thank you!');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove('show'), 3000);
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', render);
+</script>
+</body>
+</html>
