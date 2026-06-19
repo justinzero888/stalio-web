@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects/rewrites
+# Serve the Google Search Console verification file at its exact .html URL
+# (Pages otherwise 308-redirects .html -> extensionless, which GSC file
+# verification can reject). 200 = rewrite, URL stays the same.
+/googlea67e166f93efcaf9.html    /googlea67e166f93efcaf9    200
