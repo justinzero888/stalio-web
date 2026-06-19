@@ -21,7 +21,7 @@ export default function HomePage() {
           <h2 className="mx-auto mt-3 max-w-2xl font-display text-[clamp(28px,3.5vw,44px)] leading-tight tracking-tight">
             Every habit. Researched. Ready to add.
           </h2>
-          <p className="mx-auto mt-4 max-w-xl text-ink/60">
+          <p className="mx-auto mt-4 max-w-xl text-ink/70">
             Browse all {HABIT_COUNT} habits across six categories. See the full
             anatomy, research backing, and tracking method — then add any habit
             to the app in one tap.

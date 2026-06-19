@@ -41,7 +41,7 @@ export function DownloadCTA() {
             <IconBrandAndroid size={20} /> Download for Android
           </Link>
         </div>
-        <p className="mt-6 text-xs text-white/30">
+        <p className="mt-6 text-xs text-white/60">
           Free · No credit card · Works offline
         </p>
       </div>

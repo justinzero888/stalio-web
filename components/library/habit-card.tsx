@@ -81,7 +81,7 @@ export function HabitCard({ habit }: { habit: Habit }) {
           </div>
         </div>
 
-        <p className="mt-3 line-clamp-2 text-sm text-ink/60">
+        <p className="mt-3 line-clamp-2 text-sm text-ink/70">
           {habit.whatToDoEn}
         </p>
 

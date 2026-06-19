@@ -40,7 +40,7 @@ export function AppMockup() {
   return (
     <div className="mx-auto w-full max-w-[340px] rounded-[28px] border border-white/10 bg-[#15152a] p-4 shadow-[0_24px_60px_rgba(0,0,0,.4)]">
       <div className="mb-4 flex items-center justify-between px-1">
-        <span className="text-xs font-medium text-white/40">Today</span>
+        <span className="text-xs font-medium text-white/60">Today</span>
         <span className="font-display text-lg text-white">Your day</span>
         <span className="flex items-center gap-1 text-xs font-semibold text-amber">
           <IconFlame size={14} /> 14
@@ -56,7 +56,6 @@ export function AppMockup() {
                 type="button"
                 onClick={() => toggle(h.id)}
                 aria-pressed={h.done}
-                aria-label={`${h.name}, ${h.done ? "done" : "not done"}`}
                 className="flex w-full items-center gap-3 rounded-r12 bg-white/[0.04] p-3 text-left transition-colors hover:bg-white/[0.07]"
               >
                 <span
@@ -72,7 +71,7 @@ export function AppMockup() {
                   <span className="block truncate text-sm font-medium text-white">
                     {h.name}
                   </span>
-                  <span className="block truncate text-xs text-white/40">
+                  <span className="block truncate text-xs text-white/60">
                     {h.detail}
                   </span>
                 </span>

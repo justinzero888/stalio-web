@@ -78,7 +78,7 @@ export function FeatureGrid() {
         <h2 className="mt-3 font-display text-[clamp(28px,3.5vw,44px)] leading-tight tracking-tight">
           Built for doing, not planning
         </h2>
-        <p className="mt-4 text-ink/60">
+        <p className="mt-4 text-ink/70">
           Most habit apps ask you to set goals, pick schedules, and design your
           perfect routine before you&apos;ve done a single thing. Stalio starts
           on the other end.
@@ -100,7 +100,7 @@ export function FeatureGrid() {
                 <Icon size={22} style={{ color: f.fg }} />
               </div>
               <h3 className="mt-4 text-lg font-semibold">{f.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-ink/60">
+              <p className="mt-2 text-sm leading-relaxed text-ink/70">
                 {f.body}
               </p>
             </div>
