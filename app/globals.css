@@ -12,6 +12,7 @@
   --color-paper-2: #efede8;
   --color-mint: #00e5a0;
   --color-mint-dim: #00b87e;
+  --color-mint-bg: rgba(0, 229, 160, 0.1);
   --color-amber: #ffb84d;
   --color-slate: #8b8fa8;
   --color-mist: #ededf5;
@@ -41,6 +42,7 @@
   --radius-r4: 4px;
   --radius-r8: 8px;
   --radius-r12: 12px;
+  --radius-r16: 16px;
   --radius-card: 16px;
   --radius-r24: 24px;
   --radius-pill: 99px;

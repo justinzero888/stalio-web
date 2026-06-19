@@ -12,6 +12,9 @@ on:
 
 jobs:
   deploy:
+    # Enable by setting repo variable CLOUDFLARE_DEPLOY=true after adding the
+    # CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID secrets. Until then this is skipped.
+    if: ${{ vars.CLOUDFLARE_DEPLOY == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
